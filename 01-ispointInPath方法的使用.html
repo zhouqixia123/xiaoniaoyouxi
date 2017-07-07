@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        canvas {
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<canvas width="600" height="500"></canvas>
+<script>
+    var c = document.querySelector("canvas");
+    var ctx = c.getContext("2d");
+
+
+    var x = 100,y =100,w =100;
+    //绘制操作
+    ctx.rect(x,y,w,w); //生成路径
+    ctx.rect(x +200,y,w,w)
+    //ctx.fillRect(x,y,w,w); //绘制图形
+    /*添加事件的时候不能为canvas里面绘制的元素添加事件，只能为canvas添加*/
+    /*c.onclick = function(e){
+        if(e.offsetX > x && e.offsetX < x +w && e.offsetY > y && e.offsetY < y +w){
+            alert("123");
+        }
+    }*/
+
+
+    c.onclick = function(e){
+        /*isPointInPath:方法呆以判断一个坐标值是否在指定的路径内
+        * 1.必须是路径
+        * 2.什么是路径：还需要自己进行绘制才能生成图形的叫路径  moveTo lineTo rect arc*/
+        if(ctx.isPointInPath(e.offsetX, e.offsetY)){
+            alert("123");
+        }
+    }
+</script>
+</body>
+</html>

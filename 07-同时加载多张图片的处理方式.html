@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        canvas {
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<canvas width="600" height="500"></canvas>
+<script>
+    var c = document.querySelector("canvas");
+    var ctx = c.getContext("2d");
+
+
+    //绘制操作
+    //加载图片生成图片对象
+    //arr:包含图片名称的数组 ，如["birds","sky"]
+    function loadImg(arr,callback){
+        var count = 0;
+        /*能够瞬间同时加载所有图片*/
+        var imgList = [];
+        for(var i = 0;i< arr.length;i++){
+            var img = new Image();
+            img.src = "images/" + arr[i] + ".png";
+            imgList[arr[i]] = img;
+            console.log(arr[i]);
+            img.onload = function(){
+                count ++;
+                if(count == arr.length){
+                    callback(imgList);
+                }
+            }
+        }
+    }
+
+    loadImg(["birds","sky"],function(imgList){
+        /*获取加载好的图片对象*/
+        var birds = imgList["birds"];
+        var sky = imgList["sky"];
+        console.log(sky);
+        console.log(birds.width);
+    })
+</script>
+</body>
+</html>

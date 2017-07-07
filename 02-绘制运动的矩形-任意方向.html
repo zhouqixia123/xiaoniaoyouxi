@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        canvas {
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<canvas width="600" height="500"></canvas>
+<script>
+    var c = document.querySelector("canvas");
+    var ctx = c.getContext("2d");
+
+    var w = h =100;
+    var stepX = 10,stepY = 10; //速度
+    var x = 0;
+    var y = 0;
+    //绘制操作
+    ctx.fillRect(x, y, w, h);
+
+    /*添加时钟
+    * 1.你得去设置时间间隔，有时候需要去根据屏幕的分辨率来计算 ，但是分辨率是不一样的
+    * 2.当页面进入到后台，时钟并不会自动的停止，我们需要页面进入到后台后能够自动的节省效率*/
+   /* setInterval(function(){
+        move();
+    },17);*/
+
+    function move(){
+        x += stepX;
+        y += stepY;
+
+        /*判断当前矩形的位置是否到达边界*/
+        if(x > c.width - w || x <0){
+            stepX = -stepX;
+        }
+        if(y ==0 || y > c.height - h){
+            stepY = -stepY;
+        }
+
+        /*清除当前画布的内容*/
+        ctx.clearRect(0,0, c.width, c.height);
+        /*绘制填充矩形*/
+        ctx.fillRect(x, y, w, h);
+
+        /*使用类似递归的方式来实现动画
+        * 1.能自动的计算 最合理的帧频
+        * 2.当页面进入到后台会自动的节省效率*/
+        window.requestAnimationFrame(move);
+    }
+    move();
+</script>
+</body>
+</html>

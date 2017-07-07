@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        canvas {
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+<canvas width="600" height="500"></canvas>
+<script>
+    var c = document.querySelector("canvas");
+    var ctx = c.getContext("2d");
+
+
+    //绘制操作
+    /*1.绘制图片
+    * 2.当图片加载完毕之后，使用requestAnimationFrame方法反复调用某个功能函数*/
+    var birdImg = new Image();
+    birdImg.src = "../images/birds.png";
+
+    var canvasX = 100,canvasY = 100;
+    var birdIndex =0;
+    //小鸟的初速度
+    var birdSpeed = 0;
+    //重力
+    var g = 0.0003;
+    //起始时间
+    var startT = new Date();
+    //间隔结束时间
+    var endT = new Date();
+    //时间间隔
+    var offsetT = 0;
+    /*小鸟头部旋转的最大角度*/
+    var maxAngle = 45;
+    /*小鸟最大下落速度*/
+    var maxSpeed = 0.45;
+
+    birdImg.onload = function(){
+        var birdW = birdImg.width / 3;
+        var birdH = birdImg.height;
+        var birdX=0; //小鸟在图片中的水平坐标
+
+        function fly(){
+            /*下落就是在每次调用方法的时候来修改canvasY的值*/
+            startT = new Date();
+            offsetT = startT - endT;
+            endT = startT;
+            /*重力加速度公式
+            * 移动距离 =  速度 * 时间 + g *时间间隔 * 时间间隔  / 2
+            * 速度 = 初速度 + g * 时间间隔*/
+            var distanceY = birdSpeed * offsetT + g * offsetT *offsetT / 2;
+            birdSpeed = birdSpeed + g * offsetT;
+            canvasY += distanceY;
+            /*计算小鸟过程中头部需要旋转的角度值 */
+            var currentAngle = maxAngle * birdSpeed / maxSpeed;
+            if(currentAngle > 45){
+                currentAngle = 45;
+            }
+
+            /*水平坐标需要每次重新计算获取*/
+            birdX = birdIndex * birdW;
+            /*清除画布内容*/
+            ctx.clearRect(0,0, c.width, c.height);
+
+            /*让当前画布的变换不影响其它的内容*/
+            ctx.save();
+            /*实现偏移*/
+            ctx.translate(canvasX + birdW / 2,canvasY + birdH / 2);
+            /*实现旋转*/
+            ctx.rotate(Math.PI / 180 * currentAngle);
+            //ctx.drawImage(图片,素材x,素材y,素材w,素材h,画布x,画布y,素材w,素材h)
+            ctx.drawImage(birdImg,birdX,0,birdW,birdH,- birdW / 2,- birdH / 2,birdW,birdH);
+            ctx.restore();
+
+
+            birdIndex ++;
+            /*索引判断*/
+            if(birdIndex > 2){
+                birdIndex = 0;
+            }
+            /*这句代码放在最后。。。。。*/
+            window.requestAnimationFrame(fly);
+        }
+        fly();
+    }
+</script>
+</body>
+</html>
